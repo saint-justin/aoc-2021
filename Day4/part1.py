@@ -14,23 +14,16 @@ with open(f'{path}/input_test.txt') as f:
         boards.append(tempBoard)
       tempBoard = []
     else:
-      tempBoard.append(line[:-1].split())
+      tupled = []
+      for entry in line[:-1].split():
+        tupled.append((entry, 0))
+      tempBoard.append(tupled)
   boards.append(tempBoard)
 
   print(f'draws in order: {draws}')
-  tBoards = []
   for board in boards:
-    tBoard = []
-    for line in board:
-      tLine = []
-      for entry in line:
-        tLine.append((entry, 0))
-      tBoard.append(tLine)
-    tBoards.append(tBoard)
-  
-  for tBoard in tBoards:
     print('\nNew Board!')
-    for line in tBoard:
+    for line in board:
       printableLine = []
       for entry in line:
         printableLine.append(entry[1])
