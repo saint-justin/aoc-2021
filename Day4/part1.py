@@ -11,25 +11,30 @@ def check_board(board):
   for i in range(0, 5):
     # Rows
     potential_winners.append(board[i])
+    column = []
 
     for j in range(0, 5):
       # Columns
-      columns.append(board[i][j])
+      column.append(board[i][j])
 
       # Diagonals
       if i == j: 
         diagonal_1.append(board[i][j])
       if i + j == 4:
         diagonal_2.append(board[i][i])
+    columns.append(column)
 
+  # Appending columns + diagonals to the to-be-checked list
   for col in columns:
     potential_winners.append(col)
-  
   potential_winners.append(diagonal_1)
   potential_winners.append(diagonal_2)
 
+  # Actually check every collected data point
   for set in potential_winners:
-    if all([item[1] for item in set]):
+    check_bingo_success = all([item[1] for item in set])
+
+    if check_bingo_success:
       return True
   
   return False
@@ -39,11 +44,15 @@ def check_board(board):
 boards = []
 def update_all_boards(new_number):
   for board in boards:
-    for row in board:
-      for item in row:
-        if item[0] == new_number:
-          item[1] == True
-          return
+    update_single_board(new_number, board)
+
+def update_single_board(new_number, board):
+  for row in board:
+    for i in range(len(row)):
+      if row[i][0] == new_number:
+        row[i] = (row[i][0], True)
+        return
+
 
 # Debug output to print out all the boards
 def print_all_boards():
@@ -56,16 +65,29 @@ def print_all_boards():
         printableLine.append(entry[1])
       print(printableLine)
 
-def check_all_boards():
+# Checks each board for a winner
+def check_all_boards(entry):
   for board in boards:
     if check_board(board):
       print('Winner found!')
-      print(board)
+      calculate_winner_score(board, entry)
       return True
 
-with open(f'{path}/input_test.txt') as f:
+def calculate_winner_score(board, entry):
+  unmarked_numbers = 0
+  for row in board:
+
+    for item in row:
+      if item[1] == False:
+        unmarked_numbers += int(item[0])
+
+  print(f'Unmarked Numbers: {unmarked_numbers}   Last Entry Pulled: {entry}   Score: {unmarked_numbers * int(entry)}')
+
+
+with open(f'{path}/input.txt') as f:
   draws = ''
 
+  # Split up the text input into usable data
   tempBoard = []
   for line in f:
     if draws == '':
@@ -76,7 +98,7 @@ with open(f'{path}/input_test.txt') as f:
       tempBoard = []
     else:
       tupled = []
-      for entry in line[:-1].split():
+      for entry in line.strip().split():
         tupled.append((entry, False))
       tempBoard.append(tupled)
   boards.append(tempBoard)
@@ -87,9 +109,9 @@ with open(f'{path}/input_test.txt') as f:
 
   for entry in draws:
     update_all_boards(entry)
-    if check_all_boards():
+    if check_all_boards(entry):
       break
-    print_all_boards()
+    # print_all_boards()
 
 
   
