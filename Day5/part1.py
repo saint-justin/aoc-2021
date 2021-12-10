@@ -1,6 +1,5 @@
 import pathlib
-from dataclasses import dataclass
-path = f'{pathlib.Path().resolve()}/aoc-2021/Day5'
+path = f'{pathlib.Path().resolve()}/Day5'
 
 # Line position points
 position_pairs = []
@@ -57,14 +56,16 @@ def get_collision_of_two_lines(slope_intercept_a, slope_intercept_b):
   y_pos = (slope_intercept_a[0] * x_pos) + slope_intercept_a[1]
 
   print(f'\nPosition: [{x_pos}, {y_pos}]')
-  print(f'Extents')
   print(f'A: xmin: {extents_a.x_min}   xmax: {extents_a.x_max}  ymin: {extents_a.y_min}  ymax: {extents_a.y_max}')
   print(f'B: xmin: {extents_b.x_min}   xmax: {extents_b.x_max}  ymin: {extents_b.y_min}  ymax: {extents_b.y_max}')
 
-  if x_pos > max(extents_a.x_min, extents_b.x_min) and x_pos < min(extents_a.x_max, extents_b.x_max):
-    if y_pos > max(extents_a.y_min, extents_b.y_min) and y_pos < min(extents_a.y_max, extents_b.y_max):
-      print('Accepted')
-      return (x_pos, y_pos)
+  x_min = min(extents_a.x_min, extents_b.x_min)
+  x_max = max(extents_a.x_max, extents_b.x_max)
+  y_min = max(extents_a.x_min, extents_b.x_min)
+  y_max = max(extents_a.x_max, extents_b.x_max)
+  if x_pos >= x_min and x_pos <= x_max and y_pos >= y_min and y_pos <= y_max:
+    print('Accepted')
+    return (x_pos, y_pos)
   else: 
     print('Rejected')
     return False
@@ -82,7 +83,8 @@ with open(f'{path}/input_test.txt') as f:
       if i == j: 
         continue
       position = get_collision_of_two_lines(slope_intercept_pairs[i], slope_intercept_pairs[j])
-      if position != False:
+      if position != False and position != None:
+        print(position)
         key = f'[{round(position[0], 6)},{round(position[1], 6)}]'
         if key in collision_positions:
           collision_positions[key] = collision_positions[key] + 1
