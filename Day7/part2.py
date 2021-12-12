@@ -8,13 +8,20 @@ for item in data:
   sum += item
 position = round(sum / len(data)) # Start at the mean
 
+def calculate_movement_cost(n):
+  sum = 0
+  while n > 0:
+    sum += n
+    n -= 1
+  return sum
+
 def cost_to_scuttle(position):
   if position in cache:
     return cache[position]
 
   sum = 0
   for item in data:
-    sum += max(item, position) - min(item, position)
+    sum += calculate_movement_cost(max(item, position) - min(item, position))
   cache[position] = sum
   return sum
 
