@@ -3,7 +3,6 @@ import pathlib
 class DumboSystem:
   def __init__(self, dumbos):
     self.dumbos = dumbos
-    self.flashes = 0
 
   def position_is_legal(self, x, y):
     if x >= 10 or y >= 10 or x < 0 or y < 0:
@@ -35,21 +34,27 @@ class DumboSystem:
           self.flash_around_position(i, j)
   
   def clean_up(self):
+    total_flashes = 0
     for i in range(0, 10):
       for j in range(0, 10):
         if self.dumbos[i][j] > 9:
           self.dumbos[i][j] = 0
-          self.flashes += 1
+          total_flashes += 1
+    return total_flashes
 
 
 def main():
   dumbos = [[int(num) for num in line.strip()] for line in open(f'{pathlib.Path().resolve()}/input.txt')]
   system = DumboSystem(dumbos)
 
-  for cycle_number in range(0, 100):
+  cycles = 0
+  while True:
     system.cycle()
-    system.clean_up()
-    print(f'\nCycle Number {cycle_number + 1}:\nFlashes: {system.flashes}')
+    flashes = system.clean_up()
+    cycles += 1
+    print(f'Cycle Number: {cycles}   Flashes: {flashes}')
+    if flashes == 100:
+      break
 
 
       
