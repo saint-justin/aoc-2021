@@ -1,5 +1,4 @@
 import pathlib
-path = f''
 data = [line.strip() for line in open(f'{pathlib.Path().resolve()}/input.txt')]
 height, width = len(data), len(data[0])
 
